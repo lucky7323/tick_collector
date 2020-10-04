@@ -1,0 +1,3 @@
+key = "<YOUR BINANCE API KEY>"
+secret = "<YOUR BINANCE API SECRET>"
+
