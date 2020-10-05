@@ -1,5 +1,5 @@
 # tick collector
-📂 Collect Binance Tick Data using Websocket
+📂 Collect [Binance](https://www.binance.com/kr/register?ref=19858986) Tick Data using Websocket
 
 ---
 ## How to start
