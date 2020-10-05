@@ -8,16 +8,7 @@
 pip install -r requirements.txt
 ```
 
-**2. Set your Binance API Key (`config.py`)**
-```
-cp config_template.py config.py
-```
-```python
-key = "<YOUR BINANCE API KEY>"
-secret = "<YOUR BINANCE API SECRET>"
-```
-
-**3. Run collector with the symbol**
+**2. Run collector with the symbol**
 ```
 python collector.py --symbol "BTCUSDT"
 ```
