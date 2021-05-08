@@ -42,9 +42,9 @@ python collector.py --symbol "BTCUSDT"
 ```
 
 - Trade ID must increase by 1.
-- The maximum size of a .csv file is 1GB, and It automatically rolls over to 20 new files. (i.e. total 20GB) 
+- The maximum size of a .csv file is 2GB, and It automatically rolls over to new files and be compressed.
 You can modify setting values *in `collector.py` 9 lines*
 
 ```python
-handler = logging.handlers.RotatingFileHandler(file_name, maxBytes=10**9, backupCount=20)
+logger.add(f"{log_dir}{ticker}" + "_{time}.csv", format="{message}", rotation="2 GB", compression="zip")
 ```
