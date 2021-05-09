@@ -13,7 +13,7 @@
 $ pip3 install -r requirements.txt
 ```
 
-**2. (Optional) AWS S3 Configuration**
+**2. AWS S3 Configuration**
 - Set `config.json`
 - Example
 ```json
@@ -25,7 +25,7 @@ $ pip3 install -r requirements.txt
 }
 ```
 
-**3. (Optional) Add Cron-job for Uploading to AWS S3**
+**3. Add Cron-job for Uploading to AWS S3**
 ```sh
 $ sh add_cron.sh
 $ service cron restart
