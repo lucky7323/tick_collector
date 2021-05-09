@@ -6,7 +6,7 @@ from loguru import logger
 
 def set_logger(data_dir, ticker):
     logger.remove()
-    logger.add(f"{data_dir}{ticker}" + "_{time}.csv", format="{message}", rotation="2 GB", compression="zip"
+    logger.add(f"{data_dir}{ticker}" + "_{time}.csv", format="{message}", rotation="2 GB", compression="zip",
                filter=lambda record: record["extra"]["task"] == "data")
 
 
