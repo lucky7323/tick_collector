@@ -1,0 +1,7 @@
+{
+  "AWS_ACCESS_KEY": "<YOUR_AWS_ACCESS_KEY>",
+  "AWS_SECRET_KEY": "<YOUR_AWS_SECRET_KEY>",
+  "AWS_REGION": "<REGION_NAME> ex) ap-northeast-2",
+  "S3_BUCKET": "<YOUR_S3_BUCKET_NAME>",
+  "S3_BUCKET_PATH": "tickdata/"
+}
