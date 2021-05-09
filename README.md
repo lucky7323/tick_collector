@@ -1,20 +1,46 @@
 # tick collector
-📂 Collect [Binance](https://www.binance.com/kr/register?ref=19858986) Tick Data using Websocket
+📂 Collect [Binance](https://www.binance.com/kr/register?ref=19858986) Tick Data using Websocket and Automatically Store it to AWS S3.
 
 ---
-## How to start
+# **Environment**
+- python3.6+
+- ubuntu
+
+# How to start
+
 **1. Install Requirements**
-```
-pip install -r requirements.txt
+```sh
+$ pip3 install -r requirements.txt
 ```
 
-**2. Run collector with the symbol**
+**2. (Optional) AWS S3 Configuration**
+- Set `config.json`
+- Example
+```json
+{
+  "AWS_ACCESS_KEY": "",
+  "AWS_SECRET_KEY": "",
+  "S3_BUCKET": "",
+  "S3_BUCKET_PATH": "tickdata/"
+}
 ```
-python collector.py --symbol "BTCUSDT"
+
+**3. (Optional) Add Cron-job for Uploading to AWS S3**
+```sh
+$ sh add_cron.sh
+$ service cron restart
+$ crontab -l
+$ service cron status
 ```
+
+**3. Run Collector with the Symbol**
+```sh
+$ python3 collector.py --symbol BTCUSDT
+```
+- Recommend running in the background. Ex) [Screen](https://linuxize.com/post/how-to-use-linux-screen/), [nohup](https://en.wikipedia.org/wiki/Nohup)
 
 ---
-## Note
+# Note
 - Tick data is stored in the form of csv.
 
 ```javascript
@@ -48,3 +74,6 @@ You can modify setting values *in `collector.py` 9 lines*
 ```python
 logger.add(f"{log_dir}{ticker}" + "_{time}.csv", format="{message}", rotation="2 GB", compression="zip")
 ```
+
+- If you proceed with step 2-3, the collected tick-data is automatically sent to configured s3 bucket at midnight every day.
+- You can modify setting values in `add_cron.sh`
