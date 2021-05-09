@@ -72,7 +72,7 @@ $ python3 collector.py --symbol BTCUSDT
 You can modify setting values *in `collector.py` 9 lines*
 
 ```python
-logger.add(f"{log_dir}{ticker}" + "_{time}.csv", format="{message}", rotation="2 GB", compression="zip")
+logger.add(f"{data_dir}{ticker}" + "_{time}.csv", format="{message}", rotation="2 GB", compression="zip",
 ```
 
 - If you proceed with step 2-3, the collected tick-data is automatically sent to configured s3 bucket at midnight every day.
