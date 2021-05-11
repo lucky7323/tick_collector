@@ -1,3 +1,6 @@
+aiohttp==3.7.4.post0
+APScheduler==3.6.3
+async-timeout==3.0.1
 attrs==20.2.0
 autobahn==20.7.1
 Automat==20.2.0
@@ -17,13 +20,15 @@ idna==2.10
 incremental==17.5.0
 jmespath==0.10.0
 loguru==0.5.3
+multidict==5.1.0
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycparser==2.20
 PyHamcrest==2.0.2
 pyOpenSSL==19.1.0
-python-binance==0.7.5
+python-binance==1.0.8
 python-dateutil==2.8.1
+python-telegram-bot==13.5
 pytz==2020.1
 PyYAML==5.4.1
 regex==2020.9.27
@@ -32,8 +37,13 @@ rsa==4.7.2
 s3transfer==0.4.2
 service-identity==18.1.0
 six==1.15.0
+tornado==6.1
 Twisted==20.3.0
 txaio==20.4.1
+typing-extensions==3.10.0.0
 tzlocal==2.1
+ujson==4.0.2
 urllib3==1.25.10
+websockets==9.0.1
+yarl==1.6.3
 zope.interface==5.1.2
