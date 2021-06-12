@@ -1,19 +1,19 @@
 import os
-import json
 import argparse
 import boto3
 import telegram
+from configparser import ConfigParser
 from pathlib import Path
 from loguru import logger
 from glob import glob
 
 
 def upload(file_path, file_name, config, s3_logger, telebot=None):
-    access_key = config['AWS_ACCESS_KEY']
-    secret_key = config['AWS_SECRET_KEY']
-    bucket = config['S3_BUCKET']
-    bucket_path = config['S3_BUCKET_PATH']
-    chat_id = config['TELEGRAM_CHAT_ID']
+    access_key = config.get('settings', 'aws_access_key')
+    secret_key = config.get('settings', 'aws_secret_key')
+    bucket = config.get('settings', 's3_bucket')
+    bucket_path = config.get('settings', 's3_bucket_path')
+    chat_id = config.get('settings', 'telegram_chat_id')
 
     s3 = boto3.client('s3', aws_access_key_id=access_key,
                       aws_secret_access_key=secret_key)
@@ -37,17 +37,16 @@ def set_logger(log_dir):
 
 
 def get_config(path):
-    config = {}
-    with open(path) as f:
-        config = json.load(f)
-    return config
+    parser = ConfigParser()
+    parser.read(path)
+    return parser
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--log_dir", type=str, help="log directory path", default="./logs/")
     parser.add_argument("--data_dir", type=str, help="data directory path", default="./data/")
-    parser.add_argument("--config", "--c", type=str, help="configuration file path", default="./config.json")
+    parser.add_argument("--config", "--c", type=str, help="configuration file path", default="./config.ini")
     parser.add_argument("--remove", "--rm", action='store_true', help="remove data after uploading to S3")
     parser.add_argument("--telegram", "--telebot", action='store_true', help="enable telegram alarm message")
     args = parser.parse_args()
@@ -58,7 +57,7 @@ if __name__ == "__main__":
     telebot = None
 
     if args.telegram:
-        telebot = telegram.Bot(token=config['TELEGRAM_TOKEN'])
+        telebot = telegram.Bot(token=config.get('settings', 'telegram_token'))
 
     if not args.remove:
         Path(f"{args.data_dir}/uploaded").mkdir(parents=True, exist_ok=True)
