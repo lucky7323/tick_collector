@@ -14,17 +14,16 @@ $ pip3 install -r requirements.txt
 ```
 
 **2. Set Configuration**
-- Set `config.json`
+- Set `config.ini`
 - Example
-```json
-{
-  "AWS_ACCESS_KEY": "",
-  "AWS_SECRET_KEY": "",
-  "S3_BUCKET": "",
-  "S3_BUCKET_PATH": "tickdata/",
-  "TELEGRAM_TOKEN": "",
-  "TELEGRAM_CHAT_ID": ""
-}
+```ini
+[settings]
+aws_access_key = YOUR_AWS_ACCESS_KEY
+aws_secret_key = YOUR_AWS_SECRET_KEY
+s3_bucket = YOUR_S3_BUCKET_NAME
+s3_bucket_path = data/
+telegram_token = YOUR_TELEGRAM_BOT_TOKEN
+telegram_chat_id = YOUR_TELEGRAM_CHAT_ID
 ```
 - AWS acess key & secret key: https://docs.aws.amazon.com/ko_kr/general/latest/gr/aws-access-keys-best-practices.html
 - AWS S3: https://aws.amazon.com/s3/?nc1=h_ls
