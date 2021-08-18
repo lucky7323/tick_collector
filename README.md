@@ -23,7 +23,7 @@ market=SPOT
 # multiple symbols {base asset}{quote asset} (ex. BTCUSDT) w/ comma separated
 symbols=BTCUSDT,ETHUSDT
 
-# maximum single data file size (ex. 1GB)
+# maximum single data file size (ex. 1GB) for rolling over
 max_size=1 GB
 
 # aws s3 settings
