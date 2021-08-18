@@ -1,53 +1,55 @@
-from binance import AsyncClient, DepthCacheManager, BinanceSocketManager
+import os
+import pathlib
 import asyncio
-import argparse
+from typing import List
+from binance import AsyncClient, BinanceSocketManager
+from dotenv import load_dotenv
 from loguru import logger
 
 
-def set_logger(data_dir, ticker, future: bool):
-    prefix = "future_" if future else ""
-    logger.remove()
-    logger.add(f"{data_dir}{prefix}{ticker}" + "_{time}.csv", format="{message}", rotation="1 GB", compression="zip",
-               filter=lambda record: record["extra"]["task"] == "data")
+def set_logger(data_path: str, symbol: str, market: str):
+    logger.add(f"{data_path}{market}_{symbol}" + "_{time}.csv", format="{message}", rotation="1 GB", compression="zip",
+               filter=lambda record: record["extra"]["task"] == f"{market}{symbol}")
 
 
-def process_message(msg, future: bool):
-    if future:
-        msg = f"{msg['e']},{msg['E']},{msg['s']},{msg['a']},{msg['p']},{msg['q']},{msg['f']},{msg['l']},{msg['T']},{msg['m']}"
-    else:
-        msg = f"{msg['e']},{msg['E']},{msg['s']},{msg['t']},{msg['p']},{msg['q']},{msg['b']},{msg['a']},{msg['T']},{msg['m']}"
-    data_logger = logger.bind(task="data")
-    data_logger.info(msg)
+def process_message(msg: dict, market: str):
+    # aggTrade format
+    columns = ['e', 'E', 's', 'a', 'p', 'q', 'f', 'l', 'T', 'm']
+    data = "".join([msg[col] for col in columns])
+    data_logger = logger.bind(task=f"{market}{msg['s'].lower()}")
+    data_logger.info(data)
 
 
-async def main(symbol: str, future: bool):
-    market_type = "future" if future else "spot"
-    print(f'Started Collecting Tick Data of {symbol}...({market_type} market)')
+async def main(symbols: List[str], market: str):
+    print(f'Started Collecting Tick Data of {symbols}...({market} market)')
     client = await AsyncClient.create()
     bsm = BinanceSocketManager(client)
+    symbols = [f"{s}@aggTrade" for s in symbols]
 
-    if future:
-        async with bsm.aggtrade_futures_socket(symbol) as socket:
+    if market == "future":
+        async with bsm.futures_multiplex_socket(symbols) as socket:
             while True:
                 res = await socket.recv()
-                process_message(res['data'], future)
+                process_message(res['data'], market)
     else:
-        async with bsm.trade_socket(symbol) as socket:
+        async with bsm.multiplex_socket(symbols) as socket:
             while True:
                 res = await socket.recv()
-                process_message(res, future)
+                process_message(res['data'], market)
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--symbol", required=True, type=str, help="symbol {base asset}{quote asset} (ex. 'BTCUSDT')")
-    parser.add_argument("--data_dir", type=str, help="data directory path", default="./data/")
-    parser.add_argument("--future", action='store_true', help="for future market data")
-    args = parser.parse_args()
-    symbol = args.symbol.upper()
+    load_dotenv()
+    logger.remove()
+    data_dir = os.path.join(pathlib.Path().resolve(), 'data/')
 
-    set_logger(args.data_dir, symbol, args.future)
+    symbol_list = [s.lower().strip() for s in os.getenv("symbols").split(",")]
+    market_type = os.getenv("market").lower().strip()
+    assert market_type in ["future", "spot"]
+
+    for s in symbol_list:
+        set_logger(data_dir, s, market_type)
 
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(main(symbol, args.future))
+    loop.run_until_complete(main(symbol_list, market_type))
 

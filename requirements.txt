@@ -26,8 +26,9 @@ pyasn1-modules==0.2.8
 pycparser==2.20
 PyHamcrest==2.0.2
 pyOpenSSL==19.1.0
-python-binance==1.0.8
+python-binance==1.0.12
 python-dateutil==2.8.1
+python-dotenv==0.19.0
 python-telegram-bot==13.5
 pytz==2020.1
 PyYAML==5.4.1
