@@ -8,14 +8,14 @@ from loguru import logger
 
 
 def set_logger(data_path: str, symbol: str, market: str):
-    logger.add(f"{data_path}{market}_{symbol}" + "_{time}.csv", format="{message}", rotation="1 GB", compression="zip",
-               filter=lambda record: record["extra"]["task"] == f"{market}{symbol}")
+    logger.add(f"{data_path}{market}_{symbol}" + "_{time}.csv", rotation=os.getenv("max_size", "1 GB"),
+               format="{message}", compression="zip", filter=lambda rec: rec["extra"]["task"] == f"{market}{symbol}")
 
 
 def process_message(msg: dict, market: str):
     # aggTrade format
     columns = ['e', 'E', 's', 'a', 'p', 'q', 'f', 'l', 'T', 'm']
-    data = "".join([msg[col] for col in columns])
+    data = ",".join([str(msg[col]) for col in columns])
     data_logger = logger.bind(task=f"{market}{msg['s'].lower()}")
     data_logger.info(data)
 
