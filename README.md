@@ -51,7 +51,7 @@ $ crontab -l
 $ service cron status
 ```
 
-**3. Run Collector**
+**4. Run Collector**
 ```sh
 $ python3 collector.py
 ```
