@@ -14,7 +14,8 @@ def set_logger(data_path: str, symbol: str, market: str):
 
 def process_message(msg: dict, market: str):
     # aggTrade format
-    data = f"{msg['e']},{msg['E']},{msg['s']},{msg['a']},{msg['p']},{msg['q']},{msg['f']},{msg['l']},{msg['T']},{msg['m']}"
+    columns = ['e', 'E', 's', 'a', 'p', 'q', 'f', 'l', 'T', 'm']
+    data = "".join([msg[col] for col in columns])
     data_logger = logger.bind(task=f"{market}{msg['s'].lower()}")
     data_logger.info(data)
 
