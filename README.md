@@ -1,4 +1,4 @@
-# tick collector
+# tick collector [![GitHub version](https://badge.fury.io/gh/lucky7323%2Ftick_collector.svg)](https://badge.fury.io/gh/lucky7323%2Ftick_collector)
 📂 Collect [Binance](https://www.binance.com/kr/register?ref=19858986) Tick Data using Websocket and Automatically Store it to AWS S3.
 
 ---
