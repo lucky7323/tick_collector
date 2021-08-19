@@ -34,8 +34,7 @@ telegram_token=YOUR_TELEGRAM_BOT_TOKEN
 telegram_chat_id=YOUR_TELEGRAM_CHAT_ID
 ```
 
-
-### **2. Set a schedule when you upload data to s3**
+### **2. Set up a schedule to upload data to s3**
 
 Edit `docker-compose.yaml` file, line 18  👉 [here](https://github.com/lucky7323/tick_collector/blob/24e26c3353aa86f4f67f34617e2c5313ee2f7ef2/docker-compose.yaml#L18)
 ```yaml
