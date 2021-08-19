@@ -7,6 +7,8 @@ services:
     command: daemon --docker
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    env_file:
+      - .env
 
   app:
     build: .
@@ -15,5 +17,5 @@ services:
       - ./:/app/
     labels:
       ofelia.enabled: "true"
-      ofelia.job-exec.app.schedule: "0 0 0 * *"
+      ofelia.job-exec.app.schedule: "0 5 0 * *"
       ofelia.job-exec.app.command: "python upload_s3.py"
