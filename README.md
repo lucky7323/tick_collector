@@ -2,29 +2,24 @@
 📂 Collect [Binance](https://www.binance.com/kr/register?ref=19858986) Tick Data using Websocket and Automatically Store it to AWS S3.
 
 ---
-# **Environment**
-- python3.6+
-- ubuntu
+## **Prerequisite**
+- install docker🐳
 
 # How to start
 
-**1. Install Requirements**
-```sh
-$ pip3 install -r requirements.txt
-```
+### **1. Set `.env` file variables**
 
-**2. Set Configuration**
-- Set `.env`
-- Example
 ```.env
-# market: { SPOT or FUTURE }
+# market type: { SPOT or FUTURE }
 market=SPOT
 
 # multiple symbols {base asset}{quote asset} (ex. BTCUSDT) w/ comma separated
 symbols=BTCUSDT,ETHUSDT
 
-# maximum single data file size (ex. 1GB) for rolling over
-max_size=1 GB
+# a condition indicating whenever the current file should be closed and a new one started.
+# human-friendly parametrization of one of the previously enumerated types.
+# ex) "1 GB", "4 days", "10h", "monthly", "18:00", "sunday", "monday at 12:00"
+rotation=12:00
 
 # aws s3 settings
 use_s3=false
@@ -38,24 +33,27 @@ use_telegram=false
 telegram_token=YOUR_TELEGRAM_BOT_TOKEN
 telegram_chat_id=YOUR_TELEGRAM_CHAT_ID
 ```
-- AWS acess key & secret key: https://docs.aws.amazon.com/ko_kr/general/latest/gr/aws-access-keys-best-practices.html
-- AWS S3: https://aws.amazon.com/s3/?nc1=h_ls
-- Telegram token: https://t.me/botfather
-- How to get telegram chat id: https://sean-bradley.medium.com/get-telegram-chat-id-80b575520659
 
-**3. Add Cron-job for Uploading to AWS S3**
-```sh
-$ sh add_cron.sh
-$ service cron restart
-$ crontab -l
-$ service cron status
-```
 
-**4. Run Collector**
-```sh
-$ python3 collector.py
+### **2. Set a schedule when you upload data to s3**
+
+Edit `docker-compose.yaml` file, line 18  👉 [here](https://github.com/lucky7323/tick_collector/blob/24e26c3353aa86f4f67f34617e2c5313ee2f7ef2/docker-compose.yaml#L18)
+```yaml
+ofelia.job-exec.app.schedule: "0 0 0 * *"
 ```
-- Recommend running in the background. Ex) [Screen](https://linuxize.com/post/how-to-use-linux-screen/), [nohup](https://en.wikipedia.org/wiki/Nohup)
+The above default setting means that tick data is uploaded to S3 every midnight.
+
+[Scheduling format](https://godoc.org/github.com/robfig/cron) is the same as the Go implementation of `cron`. E.g. `@every 10s` or `0 0 1 * * *` (every night at 1 AM).
+
+**Note**: the format starts with seconds, instead of minutes.
+
+
+### **3. Start collecting data!**
+
+```sh
+$ docker-compose build
+$ docker-compose up -d
+```
 
 ---
 # Note
@@ -85,8 +83,11 @@ aggTrade,1620744948060,BTCUSDT,476905219,55844.48,0.191,777675083,777675083,1620
 ```
 
 - Binance docs for aggregate trade streams: [Link](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-streams.md#aggregate-trade-streams)
-- The maximum size of a .csv file is 1GB, and It automatically rolls over to new files and be compressed.
-You can modify setting values `max_size` in *.env*
-- If you proceed with step 2-3, the collected tick-data is automatically sent to configured s3 bucket at midnight every day.
-- You can modify setting values in `add_cron.sh`
 
+---
+# FAQ
+- [What is AWS S3 bucket?](https://aws.amazon.com/s3/?nc1=h_ls)
+- [What is `aws_access_key` and `aws_secret_key`?](https://docs.aws.amazon.com/ko_kr/general/latest/gr/aws-access-keys-best-practices.html)
+- [What is `telegram_token`?](https://t.me/botfather)
+- [How to get `telegram_chat_id`](https://sean-bradley.medium.com/get-telegram-chat-id-80b575520659)
+- [What is `rotation`?](https://loguru.readthedocs.io/en/stable/api/logger.html#file)
