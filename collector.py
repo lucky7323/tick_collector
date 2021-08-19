@@ -8,7 +8,7 @@ from loguru import logger
 
 
 def set_logger(data_path: str, symbol: str, market: str):
-    logger.add(f"{data_path}{market}_{symbol}" + "_{time}.csv", rotation=os.getenv("max_size", "1 GB"),
+    logger.add(f"{data_path}{market}_{symbol}" + "_{time}.csv", rotation=os.getenv("rotation", "12:00"),
                format="{message}", compression="zip", filter=lambda rec: rec["extra"]["task"] == f"{market}{symbol}")
 
 

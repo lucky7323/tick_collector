@@ -1,0 +1,19 @@
+version: "3"
+services:
+  ofelia:
+    image: mcuadros/ofelia:latest
+    depends_on:
+      - app
+    command: daemon --docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  app:
+    build: .
+    container_name: app
+    volumes:
+      - ./:/app/
+    labels:
+      ofelia.enabled: "true"
+      ofelia.job-exec.app.schedule: "0 0 0 * *"
+      ofelia.job-exec.app.command: "python upload_s3.py"
