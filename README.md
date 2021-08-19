@@ -10,6 +10,9 @@
 ### **1. Set `.env` file variables**
 
 ```.env
+# timezone (ex. Asia/Seoul)
+TZ=UTC
+
 # market type: { SPOT or FUTURE }
 market=SPOT
 
@@ -19,10 +22,10 @@ symbols=BTCUSDT,ETHUSDT
 # a condition indicating whenever the current file should be closed and a new one started.
 # human-friendly parametrization of one of the previously enumerated types.
 # ex) "1 GB", "4 days", "10h", "monthly", "18:00", "sunday", "monday at 12:00"
-rotation=12:00
+rotation=00:00
 
 # aws s3 settings
-use_s3=false
+use_s3=true
 aws_access_key=YOUR_AWS_ACCESS_KEY
 aws_secret_key=YOUR_AWS_SECRET_KEY
 s3_bucket=YOUR_S3_BUCKET_NAME
@@ -36,13 +39,13 @@ telegram_chat_id=YOUR_TELEGRAM_CHAT_ID
 
 ### **2. Set up a schedule to upload data to s3**
 
-Edit `docker-compose.yaml` file, line 18  👉 [here](https://github.com/lucky7323/tick_collector/blob/24e26c3353aa86f4f67f34617e2c5313ee2f7ef2/docker-compose.yaml#L18)
+Edit `docker-compose.yaml` file, line 20  👉 [here](https://github.com/lucky7323/tick_collector/blob/8096d909809c9ed1a7f1de1c95e02e525fcb39eb/docker-compose.yaml#L20)
 ```yaml
-ofelia.job-exec.app.schedule: "0 0 0 * *"
+ofelia.job-exec.app.schedule: "0 5 0 * *"
 ```
-The above default setting means that tick data is uploaded to S3 every midnight.
+The above default setting means that tick data is uploaded to S3 every midnight+5minutes (00:05:00).
 
-[Scheduling format](https://godoc.org/github.com/robfig/cron) is the same as the Go implementation of `cron`. E.g. `@every 10s` or `0 0 1 * * *` (every night at 1 AM).
+[Scheduling format](https://godoc.org/github.com/robfig/cron) is the same as the Go implementation of `cron`. E.g. `@every 10s` or `0 0 1 * *` (every night at 1 AM).
 
 **Note**: the format starts with seconds, instead of minutes.
 
